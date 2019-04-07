@@ -5,12 +5,26 @@ n_test_cases = int(input())
 for t in range(n_test_cases):
     n, l = [int(x) for x in input().strip().split()]
     cipher_text = [int(x) for x in input().strip().split()]
-    pangrams_enc = []
+    st_pos = 0
     for i in range(l - 1):
-        x = gcd(cipher_text[i], cipher_text[i + 1])
-        if i == 0: pangrams_enc.append(cipher_text[i] // x)
-        pangrams_enc.append(x)
-        if i == l - 2: pangrams_enc.append(cipher_text[i + 1] // x)
+        if cipher_text[i] != cipher_text[i + 1]:
+            st_pos = i
+            break
+    
+    x = gcd(cipher_text[st_pos], cipher_text[st_pos + 1])
+    pangrams_enc = [x]
+    for i in range(st_pos, -1, -1):
+        y = cipher_text[i] // x
+        pangrams_enc.append(y)
+        x = y
+    pangrams_enc = pangrams_enc[::-1]
+    
+    x = pangrams_enc[-1]
+    for i in range(st_pos, l - 1):
+        y = cipher_text[i + 1] // x
+        pangrams_enc.append(y)
+        x = y
+    
     pangrams_list = list(set(pangrams_enc))
     pangrams_list.sort()
     decoder = {}
